@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geens.Api", "Geens.Api\Geen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geens.Tests", "Geens.Tests\Geens.Tests.csproj", "{F2F49573-B98C-4C7F-A91F-BBE72932F807}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Geens_Sources", "Geens_Sources", "{3F5F0B5E-BC0E-4560-933E-3B3B7BB3DAC0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Geens_Tests", "Geens_Tests", "{44996D6F-AE2E-4E59-B463-9869ACEE0FE7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
