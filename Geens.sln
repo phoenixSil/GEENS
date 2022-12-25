@@ -25,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Geens.Ioc", "Geens.Ioc", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geens.Application", "Geens.Application\Geens.Application.csproj", "{C0479A9C-ACFB-433D-9CA0-B4E02E6E7BDD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geens.Data", "Geens.Data\Geens.Data.csproj", "{EAEADA28-B5A4-4DA9-9B3F-47E2C6328884}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{C0479A9C-ACFB-433D-9CA0-B4E02E6E7BDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0479A9C-ACFB-433D-9CA0-B4E02E6E7BDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0479A9C-ACFB-433D-9CA0-B4E02E6E7BDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAEADA28-B5A4-4DA9-9B3F-47E2C6328884}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAEADA28-B5A4-4DA9-9B3F-47E2C6328884}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAEADA28-B5A4-4DA9-9B3F-47E2C6328884}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAEADA28-B5A4-4DA9-9B3F-47E2C6328884}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -57,6 +63,7 @@ Global
 		{1AF85146-CE2F-4E98-9299-C3C770672C88} = {3F5F0B5E-BC0E-4560-933E-3B3B7BB3DAC0}
 		{2C6FCA93-224B-4921-9FE3-356E8D840A36} = {3F5F0B5E-BC0E-4560-933E-3B3B7BB3DAC0}
 		{C0479A9C-ACFB-433D-9CA0-B4E02E6E7BDD} = {66191433-966C-46F7-9CD8-28BE536EC998}
+		{EAEADA28-B5A4-4DA9-9B3F-47E2C6328884} = {91FEEAF2-E1D4-4A56-804D-2A539366177A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {95EF6E4E-9C71-4E4D-ADA3-8AF5EF88BE82}
