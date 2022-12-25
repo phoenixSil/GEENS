@@ -10,24 +10,22 @@ using Geens.Features.Proxies.GdcProxys;
 using Geens.Features.Proxies.GdcProxys.Contrats;
 using Geens.Features.Contrats.Repertoires;
 using Geens.Features.Core.Commandes.Enseignants;
+using Geens.Features.Core.BaseFactoryClass;
+using Microsoft.Extensions.Logging;
 
 namespace Geens.Features.Core.CommandHandlers.Enseignants
 {
-    public class ModifierUnEnseignantCmdHdler : IRequestHandler<ModifierUnEnseignantCmd, ReponseDeRequette>
+    public class ModifierUnEnseignantCmdHdler : BaseCommandHandler<ModifierUnEnseignantCmd, ReponseDeRequette>
     {
-        private readonly IPointDaccess _pointDaccess;
-        private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
-        private readonly IGdcProxy _gdcProxy;
+        private readonly ILogger<ModifierUnEnseignantCmdHdler> _logger;
 
-        public ModifierUnEnseignantCmdHdler(IGdcProxy gdcProxy, IPointDaccess pointDaccess, IMediator mediator, IMapper mapper)
+        public ModifierUnEnseignantCmdHdler(ILogger<ModifierUnEnseignantCmdHdler> logger, IMediator mediator, IMapper mapper, IPointDaccess pointDaccess) :
+            base(pointDaccess, mediator, mapper)
         {
-            _pointDaccess = pointDaccess;
-            _mediator = mediator;
-            _mapper = mapper;
-            _gdcProxy = gdcProxy;
+            _logger = logger;
         }
-        public async Task<ReponseDeRequette> Handle(ModifierUnEnseignantCmd request, CancellationToken cancellationToken)
+
+        public override async  Task<ReponseDeRequette> Handle(ModifierUnEnseignantCmd request, CancellationToken cancellationToken)
         {
             var enseignant = await _pointDaccess.RepertoireDenseignant.Lire(request.EnseignantId);
 

@@ -6,21 +6,22 @@ using Geens.Features.Core.Commandes.Enseignants;
 using Geens.Domain.Modeles;
 using Geens.Features.Dtos.Enseignants;
 using Geens.Features.Contrats.Repertoires;
+using Geens.Features.Core.BaseFactoryClass;
+using Microsoft.Extensions.Logging;
 
 namespace Geens.Features.Core.CommandHandlers.Enseignants
 {
-    public class LireTousLesEnseignantsCmdHdler : IRequestHandler<LireTousLesEnseignantsCmd, List<EnseignantDto>>
+    public class LireTousLesEnseignantsCmdHdler : BaseCommandHandler<LireTousLesEnseignantsCmd, List<EnseignantDto>>
     {
-        private readonly IPointDaccess _pointDaccess;
-        private readonly IMapper _mapper;
+        private readonly ILogger<LireTousLesEnseignantsCmdHdler> _logger;
 
-        public LireTousLesEnseignantsCmdHdler(IPointDaccess pointDaccess, IMapper mapper)
+        public LireTousLesEnseignantsCmdHdler(ILogger<LireTousLesEnseignantsCmdHdler> logger, IMediator mediator, IMapper mapper, IPointDaccess pointDaccess) :
+            base(pointDaccess, mediator, mapper)
         {
-            _pointDaccess = pointDaccess;
-            _mapper = mapper;
+            _logger = logger;
         }
 
-        public async Task<List<EnseignantDto>> Handle(LireTousLesEnseignantsCmd request, CancellationToken cancellationToken)
+        public override async  Task<List<EnseignantDto>> Handle(LireTousLesEnseignantsCmd request, CancellationToken cancellationToken)
         {
 
             var listEnseignant = await _pointDaccess.RepertoireDenseignant.Lire();

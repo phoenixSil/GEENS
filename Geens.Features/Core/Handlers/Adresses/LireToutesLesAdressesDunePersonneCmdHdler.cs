@@ -6,21 +6,22 @@ using Geens.Domain.Modeles;
 using Geens.Features.Core.Commandes.Adresses;
 using Geens.Features.Dtos.Adresses;
 using Geens.Features.Contrats.Repertoires;
+using Geens.Features.Core.BaseFactoryClass;
+using Microsoft.Extensions.Logging;
 
 namespace Geens.Features.Core.CommandHandlers.Adresses
 {
-    public class LireToutesLesAdressesDunEnseignantCmdHdler : IRequestHandler<LireToutesLesAdressesDunEnseignantCmd, List<AdresseDto>>
+    public class LireToutesLesAdressesDunEnseignantCmdHdler : BaseCommandHandler<LireToutesLesAdressesDunEnseignantCmd, List<AdresseDto>>
     {
-        private readonly IPointDaccess _pointDaccess;
-        private readonly IMapper _mapper;
+        private readonly ILogger<LireToutesLesAdressesDunEnseignantCmdHdler> _logger;
 
-        public LireToutesLesAdressesDunEnseignantCmdHdler(IPointDaccess pointDaccess, IMapper mapper)
+        public LireToutesLesAdressesDunEnseignantCmdHdler(ILogger<LireToutesLesAdressesDunEnseignantCmdHdler> logger, IMediator mediator, IMapper mapper, IPointDaccess pointDaccess) :
+            base(pointDaccess, mediator, mapper)
         {
-            _pointDaccess = pointDaccess;
-            _mapper = mapper;
+            _logger = logger;
         }
 
-        public async Task<List<AdresseDto>> Handle(LireToutesLesAdressesDunEnseignantCmd request, CancellationToken cancellationToken)
+        public override async  Task<List<AdresseDto>> Handle(LireToutesLesAdressesDunEnseignantCmd request, CancellationToken cancellationToken)
         {
             var enseignant = await _pointDaccess.RepertoireDenseignant.Lire(request.EnseignantId);
 
@@ -35,18 +36,17 @@ namespace Geens.Features.Core.CommandHandlers.Adresses
         }
     }
 
-    public class LreToutesLesAdressesCmdHdler : IRequestHandler<LreToutesLesAdressesCmd, List<AdresseDto>>
+    public class LreToutesLesAdressesCmdHdler : BaseCommandHandler<LreToutesLesAdressesCmd, List<AdresseDto>>
     {
-        private readonly IPointDaccess _pointDaccess;
-        private readonly IMapper _mapper;
+        private readonly ILogger<LreToutesLesAdressesCmdHdler> _logger;
 
-        public LreToutesLesAdressesCmdHdler(IPointDaccess pointDaccess, IMapper mapper)
+        public LreToutesLesAdressesCmdHdler(ILogger<LreToutesLesAdressesCmdHdler> logger, IMediator mediator, IMapper mapper, IPointDaccess pointDaccess) :
+            base(pointDaccess, mediator, mapper)
         {
-            _pointDaccess = pointDaccess;
-            _mapper = mapper;
+            _logger = logger;
         }
 
-        public async Task<List<AdresseDto>> Handle(LreToutesLesAdressesCmd request, CancellationToken cancellationToken)
+        public override async  Task<List<AdresseDto>> Handle(LreToutesLesAdressesCmd request, CancellationToken cancellationToken)
         {
             var listAdresse = _pointDaccess.RepertoireDadresse.Lire();
 

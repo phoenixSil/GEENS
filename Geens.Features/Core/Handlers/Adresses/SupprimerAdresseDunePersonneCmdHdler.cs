@@ -5,27 +5,32 @@ using Geens.Domain.Modeles;
 using MsCommun.Reponses;
 using Geens.Features.Core.Commandes.Adresses;
 using Geens.Features.Contrats.Repertoires;
+using Geens.Features.Core.BaseFactoryClass;
+using Microsoft.Extensions.Logging;
 
 namespace Geens.Features.Core.CommandHandlers.Adresses
 {
-    public class SupprimerAdresseDunEnseignantCmdHdler : IRequestHandler<SupprimerAdresseDunEnseignantCmd, ReponseDeRequette>
+    public class SupprimerAdresseDunEnseignantCmdHdler : BaseCommandHandler<SupprimerAdresseDunEnseignantCmd, ReponseDeRequette>
     {
-        private readonly IPointDaccess _pointDAccess;
-        public SupprimerAdresseDunEnseignantCmdHdler(IPointDaccess pointDAccess)
+        private readonly ILogger<SupprimerAdresseDunEnseignantCmdHdler> _logger;
+
+        public SupprimerAdresseDunEnseignantCmdHdler(ILogger<SupprimerAdresseDunEnseignantCmdHdler> logger, IMediator mediator, IMapper mapper, IPointDaccess pointDaccess) :
+            base(pointDaccess, mediator, mapper)
         {
-            _pointDAccess = pointDAccess;
+            _logger = logger;
         }
-        public async Task<ReponseDeRequette> Handle(SupprimerAdresseDunEnseignantCmd request, CancellationToken cancellationToken)
+
+        public override async  Task<ReponseDeRequette> Handle(SupprimerAdresseDunEnseignantCmd request, CancellationToken cancellationToken)
         {
             var response = new ReponseDeRequette();
 
-            var adresse = await _pointDAccess.RepertoireDadresse.Lire(request.AdresseId);
+            var adresse = await _pointDaccess.RepertoireDadresse.Lire(request.AdresseId);
 
             //validation
             if (adresse is null)
                 throw new NotFoundException(nameof(Adresse),request.AdresseId);
 
-            var resultat = await _pointDAccess.RepertoireDadresse.Supprimer(adresse);
+            var resultat = await _pointDaccess.RepertoireDadresse.Supprimer(adresse);
 
             if (resultat == true)
             {

@@ -9,27 +9,21 @@ using Geens.Features.Proxies.GdcProxys;
 using Geens.Features.Proxies.GdcProxys.Contrats;
 using Microsoft.Extensions.Logging;
 using Geens.Features.Contrats.Repertoires;
+using Geens.Features.Core.BaseFactoryClass;
 
 namespace Geens.Features.Core.CommandHandlers.Enseignants
 {
-    public class SupprimerUnEnseignantCmdHdler : IRequestHandler<SupprimerUnEnseignantCmd, ReponseDeRequette>
+    public class SupprimerUnEnseignantCmdHdler : BaseCommandHandler<SupprimerUnEnseignantCmd, ReponseDeRequette>
     {
-        private readonly IPointDaccess _pointDaccess;
-        private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
-        private readonly IGdcProxy _gdcProxy;
-        private readonly ILogger<AjouterUnEnseignantAUnEnseignantCmdHdler> _logger;
+        private readonly ILogger<SupprimerUnEnseignantCmdHdler> _logger;
 
-        public SupprimerUnEnseignantCmdHdler(IMediator mediator, IGdcProxy gdcProxy, ILogger<AjouterUnEnseignantAUnEnseignantCmdHdler> logger, IMapper mapper, IPointDaccess pointDaccess)
+        public SupprimerUnEnseignantCmdHdler(ILogger<SupprimerUnEnseignantCmdHdler> logger, IMediator mediator, IMapper mapper, IPointDaccess pointDaccess) :
+            base(pointDaccess, mediator, mapper)
         {
-            _pointDaccess = pointDaccess;
-            _mapper = mapper;
-            _mediator = mediator;
-            _gdcProxy = gdcProxy;
             _logger = logger;
         }
 
-        public async Task<ReponseDeRequette> Handle(SupprimerUnEnseignantCmd request, CancellationToken cancellationToken)
+        public override async  Task<ReponseDeRequette> Handle(SupprimerUnEnseignantCmd request, CancellationToken cancellationToken)
         {
             var response = new ReponseDeRequette();
 

@@ -5,20 +5,23 @@ using Geens.Domain.Modeles;
 using MsCommun.Reponses;
 using Geens.Features.Core.Commandes.Adresses;
 using Geens.Features.Contrats.Repertoires;
+using Geens.Features.Core.BaseFactoryClass;
+using Castle.Core.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace Geens.Features.Core.CommandHandlers.Adresses
 {
-    public class AjouterUneAdresseAUnEnseignantCmdHdler : IRequestHandler<AjouterUneAdresseAUnEnseignantCmd, ReponseDeRequette>
+    public class AjouterUneAdresseAUnEnseignantCmdHdler : BaseCommandHandler<AjouterUneAdresseAUnEnseignantCmd, ReponseDeRequette>
     {
-        private readonly IPointDaccess _pointDaccess;
-        private readonly IMapper _mapper;
+        private readonly ILogger<AjouterUneAdresseAUnEnseignantCmdHdler> _logger;
 
-        public AjouterUneAdresseAUnEnseignantCmdHdler(IMapper mapper, IPointDaccess pointDaccess)
+        public AjouterUneAdresseAUnEnseignantCmdHdler(ILogger<AjouterUneAdresseAUnEnseignantCmdHdler> logger,  IMediator mediator,  IMapper mapper, IPointDaccess pointDaccess):
+            base(pointDaccess, mediator, mapper)
         {
-            _pointDaccess = pointDaccess;
-            _mapper = mapper;
+            _logger = logger;
         }
-        public async Task<ReponseDeRequette> Handle(AjouterUneAdresseAUnEnseignantCmd request, CancellationToken cancellationToken)
+
+        public override async  Task<ReponseDeRequette> Handle(AjouterUneAdresseAUnEnseignantCmd request, CancellationToken cancellationToken)
         {            
             var reponse = new ReponseDeRequette();
             var validateur = new ValidateurDeLaCreationDadresseDto(_pointDaccess);

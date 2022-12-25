@@ -6,22 +6,22 @@ using Geens.Domain.Modeles;
 using MsCommun.Reponses;
 using Geens.Features.Core.Commandes.Adresses;
 using Geens.Features.Contrats.Repertoires;
+using Geens.Features.Core.BaseFactoryClass;
+using Microsoft.Extensions.Logging;
 
 namespace Geens.Features.Core.CommandHandlers.Adresses
 {
-    public class ModifierAdresseDunEnseignantCmdHdler : IRequestHandler<ModifierAdresseDunEnseignantCmd, ReponseDeRequette>
+    public class ModifierAdresseDunEnseignantCmdHdler : BaseCommandHandler<ModifierAdresseDunEnseignantCmd, ReponseDeRequette>
     {
-        private readonly IPointDaccess _pointDaccess;
-        private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
-        public ModifierAdresseDunEnseignantCmdHdler(IPointDaccess pointDaccess, IMediator mediator, IMapper mapper)
+        private readonly ILogger<ModifierAdresseDunEnseignantCmdHdler> _logger;
+
+        public ModifierAdresseDunEnseignantCmdHdler(ILogger<ModifierAdresseDunEnseignantCmdHdler> logger, IMediator mediator, IMapper mapper, IPointDaccess pointDaccess) :
+            base(pointDaccess, mediator, mapper)
         {
-            _pointDaccess = pointDaccess;
-            _mediator = mediator;
-            _mapper = mapper;
+            _logger = logger;
         }
 
-        public async Task<ReponseDeRequette> Handle(ModifierAdresseDunEnseignantCmd request, CancellationToken cancellationToken)
+        public override async  Task<ReponseDeRequette> Handle(ModifierAdresseDunEnseignantCmd request, CancellationToken cancellationToken)
         {
 
             var adresse = await _pointDaccess.RepertoireDadresse.Lire(request.AdresseId);

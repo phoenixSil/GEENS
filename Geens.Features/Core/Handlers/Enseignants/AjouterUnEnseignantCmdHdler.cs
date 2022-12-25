@@ -8,26 +8,22 @@ using Geens.Features.Proxies.GdcProxys;
 using Geens.Features.Proxies.GdcProxys.Contrats;
 using Geens.Features.Contrats.Repertoires;
 using Microsoft.Extensions.Logging;
+using Geens.Features.Core.BaseFactoryClass;
+
 
 namespace Geens.Features.Core.CommandHandlers.Enseignants
 {
-    public class AjouterUnEnseignantAUnEnseignantCmdHdler : IRequestHandler<AjouterUnEnseignantCmd, ReponseDeRequette>
+    public class AjouterUnEnseignantAUnEnseignantCmdHdler : BaseCommandHandler<AjouterUnEnseignantCmd, ReponseDeRequette>
     {
-        private readonly IPointDaccess _pointDaccess;
-        private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
-        private readonly IGdcProxy _gdcProxy;
         private readonly ILogger<AjouterUnEnseignantAUnEnseignantCmdHdler> _logger;
 
-        public AjouterUnEnseignantAUnEnseignantCmdHdler(IMediator mediator, IGdcProxy gdcProxy, ILogger<AjouterUnEnseignantAUnEnseignantCmdHdler> logger, IMapper mapper, IPointDaccess pointDaccess)
+        public AjouterUnEnseignantAUnEnseignantCmdHdler(ILogger<AjouterUnEnseignantAUnEnseignantCmdHdler> logger, IMediator mediator, IMapper mapper, IPointDaccess pointDaccess) :
+            base(pointDaccess, mediator, mapper)
         {
-            _pointDaccess = pointDaccess;
-            _mapper = mapper;
-            _mediator = mediator;
-            _gdcProxy = gdcProxy;
             _logger = logger;
         }
-        public async Task<ReponseDeRequette> Handle(AjouterUnEnseignantCmd request, CancellationToken cancellationToken)
+
+        public override async  Task<ReponseDeRequette> Handle(AjouterUnEnseignantCmd request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("on vas ammorcer l'ajout d'un Enseignant dans le MS Enseignant");
             var reponse = new ReponseDeRequette();
