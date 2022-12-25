@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Geens.Features.Core.BaseFactoryClass
 {
     public abstract class BaseCommand<K> : IRequest<K>
