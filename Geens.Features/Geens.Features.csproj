@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Geens.Domain\Geens.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
