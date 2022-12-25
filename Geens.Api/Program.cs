@@ -1,7 +1,7 @@
-using Geens.Api.Datas;
-using Geens.Api.Extensions;
 using MsCommun.Extensions;
 using Serilog;
+using Geens.Ioc;
+using Geens.Features.Proxies.GdcProxys;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,22 +18,13 @@ builder.Logging.AddSerilog(logger);
 Log.Information("GDE Demmarre demarre ");
 builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console().ReadFrom.Configuration(ctx.Configuration));
 
-if (builder.Environment.IsProduction())
-{
-    builder.Services.AddSqlServerDbConfiguration<EnseignantDbContext>(builder.Configuration.GetConnectionString("appConnString"));
-}
-else
-{
-    builder.Services.AddInMemoryDataBaseConfiguration<EnseignantDbContext>("InMem");
-}
+
+// configuration des options dans le services
+builder.Services.Configure<GdcProxyOptions>(builder.Configuration.GetSection(GdcProxyOptions.Path));
 
 
-builder.Services.ConfigureApplicationServices();
-builder.Services.ConfigureControllerServices();
-builder.Services.ConfigurePersistenceServices(builder.Configuration);
-builder.Services.AjoutterCoucheDesProxies(builder.Configuration);
-
-
+builder.Services.AjoutDeToutesLesExtensions(builder.Configuration);
+builder.Services.AddConfigurationMassTransitWithRabbitMQ(builder.Configuration);
 // Add services to the container.
 
 builder.Services.AddControllers();

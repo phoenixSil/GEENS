@@ -1,9 +1,10 @@
-﻿using Geens.Api.Dtos.Adresses;
+﻿using Geens.Features.Dtos.Adresses;
 using Geens.Api.DTOs.Adresses;
 using MsCommun.Reponses;
-using Geens.Api.Services.Contrats;
+using Geens.Features.Contrats.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Geens.Features.Contrats.Services;
 
 namespace Geens.Api.Controllers
 {

@@ -1,7 +1,7 @@
-﻿using Geens.Api.Dtos.Enseignants;
+﻿using Geens.Features.Dtos.Enseignants;
 using MsCommun.Reponses;
-using Geens.Api.Services.Contrats;
 using Microsoft.AspNetCore.Mvc;
+using Geens.Features.Contrats.Services;
 
 namespace Geens.Api.Controllers
 {

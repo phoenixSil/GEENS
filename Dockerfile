@@ -8,6 +8,11 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["Geens.Api/Geens.Api.csproj", "Geens.Api/"]
+COPY ["Geens.Domain/Geens.Domain.csproj", "Geens.Domain/"]
+COPY ["Geens.Ioc/Geens.Ioc.csproj", "Geens.Ioc/"]
+COPY ["Geens.Application/Geens.Application.csproj", "Geens.Application/"]
+COPY ["Geens.Features/Geens.Features.csproj", "Geens.Features/"]
+COPY ["Geens.Data/Geens.Data.csproj", "Geens.Data/"]
 RUN dotnet restore "Geens.Api/Geens.Api.csproj"
 COPY . .
 WORKDIR "/src/Geens.Api"
