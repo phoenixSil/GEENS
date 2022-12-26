@@ -33,9 +33,9 @@ namespace Geens.Features.Proxies.GdcProxys
             throw new Exception($" parsed na pas marcher {parsed}");
         }
 
-        private EnseignantGdcACreerDto GenerateDtoEnseignantPourGdc(Enseignant enseignant)
+        private EnseignantACreerMessage GenerateDtoEnseignantPourGdc(Enseignant enseignant)
         {
-            var enseignantgdcDto = _mapper.Map<EnseignantGdcACreerDto>(enseignant);
+            var enseignantgdcDto = _mapper.Map<EnseignantACreerMessage>(enseignant);
             return enseignantgdcDto;
         }
     }

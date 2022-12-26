@@ -2,7 +2,7 @@
 
 namespace Geens.Features.Dtos.Enseignants
 {
-    public class EnseignantGdcACreerDto
+    public class EnseignantACreerMessage
     {
         public string Nom { get; set; }
         public string Prenom { get; set; }

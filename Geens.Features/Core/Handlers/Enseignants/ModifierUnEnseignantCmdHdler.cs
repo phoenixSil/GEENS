@@ -12,17 +12,23 @@ using Geens.Features.Contrats.Repertoires;
 using Geens.Features.Core.Commandes.Enseignants;
 using Geens.Features.Core.BaseFactoryClass;
 using Microsoft.Extensions.Logging;
+using MassTransit;
+using MsCommun.Messages.Niveaux;
+using MsCommun.Messages.Utils;
+using MsCommun.Messages.Enseignants;
 
 namespace Geens.Features.Core.CommandHandlers.Enseignants
 {
     public class ModifierUnEnseignantCmdHdler : BaseCommandHandler<ModifierUnEnseignantCmd, ReponseDeRequette>
     {
         private readonly ILogger<ModifierUnEnseignantCmdHdler> _logger;
+        private readonly IPublishEndpoint _publishEndPoint;
 
-        public ModifierUnEnseignantCmdHdler(ILogger<ModifierUnEnseignantCmdHdler> logger, IMediator mediator, IMapper mapper, IPointDaccess pointDaccess) :
+        public ModifierUnEnseignantCmdHdler(IPublishEndpoint publishEndPoint, ILogger<ModifierUnEnseignantCmdHdler> logger, IMediator mediator, IMapper mapper, IPointDaccess pointDaccess) :
             base(pointDaccess, mediator, mapper)
         {
             _logger = logger;
+            _publishEndPoint = publishEndPoint;
         }
 
         public override async  Task<ReponseDeRequette> Handle(ModifierUnEnseignantCmd request, CancellationToken cancellationToken)
@@ -47,9 +53,12 @@ namespace Geens.Features.Core.CommandHandlers.Enseignants
                 _mapper.Map(request.EnseignantAModifierDto, enseignant);
 
                 await _pointDaccess.RepertoireDenseignant.Modifier(enseignant);
-                await _pointDaccess.Enregistrer();
 
                 //await _gdcProxy.ModifierEnseignantDansGDC(enseignant);
+
+                // Communication Asynchrone via le Bus Rabbit MQ
+                var dto = await GenerateDtoPourEnseignant(enseignant.Id).ConfigureAwait(false);
+                await _publishEndPoint.Publish(dto, cancellationToken).ConfigureAwait(false);
 
                 reponse.Success = true;
                 reponse.Message = "Modification Reussit";
@@ -59,6 +68,19 @@ namespace Geens.Features.Core.CommandHandlers.Enseignants
             }
             throw new BadRequestException("enseignant a Modifier est null");
         }
+
+        #region PRIVATE FUNCTION
+
+        private async Task<EnseignantAModifierMessage> GenerateDtoPourEnseignant(Guid id)
+        {
+            var enseignantDetail = await _pointDaccess.RepertoireDenseignant.LireDetailDunEnseignant(id);
+            var enseignantMapper = _mapper.Map<EnseignantAModifierMessage>(enseignantDetail);
+            enseignantMapper.Service = DesignationService.SERVICE_GEENS;
+            enseignantMapper.Type = TypeMessage.MODIFICATION;
+            return enseignantMapper;
+        }
+
+        #endregion
     }
 
 }

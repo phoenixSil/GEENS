@@ -23,8 +23,8 @@ namespace Geens.Api.Controllers
         public async Task<ActionResult<ReponseDeRequette>> AjouterUnEnseignant(EnseignantACreerDto enseignantAAjouterDto)
         {
             _logger.LogInformation($"Controller :: {nameof(AjouterUnEnseignant)} ");
-            var result = await _service.AjouterUnEnseignant(enseignantAAjouterDto);
-            return Ok(result);
+            var result = await _service.AjouterUnEnseignant(enseignantAAjouterDto).ConfigureAwait(false);
+            return StatusCode(result.StatusCode, result);
         }
 
         [HttpGet]
@@ -64,8 +64,8 @@ namespace Geens.Api.Controllers
         public async Task<ActionResult<ReponseDeRequette>> ModifierUnEnseignant(Guid enseignantId, EnseignantAModifierDto enseignantAModifierDto)
         {
             _logger.LogInformation($"Controller :: {nameof(ModifierUnEnseignant)} ");
-            var resultat = await _service.ModifierUnEnseignant(enseignantId, enseignantAModifierDto);
-            return Ok(resultat);
+            var resultat = await _service.ModifierUnEnseignant(enseignantId, enseignantAModifierDto).ConfigureAwait(false);
+            return StatusCode(resultat.StatusCode, resultat);
         }
 
 
@@ -76,8 +76,8 @@ namespace Geens.Api.Controllers
         public async Task<ActionResult<ReponseDeRequette>> SupprimerUnEnseignant(Guid enseignantId)
         {
             _logger.LogInformation($"Controller :: {nameof(SupprimerUnEnseignant)} ");
-            var resultat = await _service.SupprimerUnEnseignant(enseignantId);
-            return Ok(resultat);
+            var resultat = await _service.SupprimerUnEnseignant(enseignantId).ConfigureAwait(false);
+            return StatusCode(resultat.StatusCode, resultat);
         }
     }
 }
