@@ -1,21 +1,16 @@
 ﻿using AutoMapper;
 using MediatR;
-using Geens.Api.DTOs.Enseignants;
-using Geens.Api.DTOs.Enseignants;
 using Geens.Api.DTOs.Enseignants.Validations;
-using MsCommun.Exceptions;
-using Geens.Domain.Modeles;
 using MsCommun.Reponses;
-using Geens.Features.Proxies.GdcProxys;
-using Geens.Features.Proxies.GdcProxys.Contrats;
 using Geens.Features.Contrats.Repertoires;
 using Geens.Features.Core.Commandes.Enseignants;
 using Geens.Features.Core.BaseFactoryClass;
 using Microsoft.Extensions.Logging;
 using MassTransit;
-using MsCommun.Messages.Niveaux;
 using MsCommun.Messages.Utils;
 using MsCommun.Messages.Enseignants;
+using Newtonsoft.Json;
+using System.Net;
 
 namespace Geens.Features.Core.CommandHandlers.Enseignants
 {
@@ -33,40 +28,50 @@ namespace Geens.Features.Core.CommandHandlers.Enseignants
 
         public override async  Task<ReponseDeRequette> Handle(ModifierUnEnseignantCmd request, CancellationToken cancellationToken)
         {
-            var enseignant = await _pointDaccess.RepertoireDenseignant.Lire(request.EnseignantId);
+            _logger.LogInformation($"On vas essayer de Modifier un Enseignant . Donness {JsonConvert.SerializeObject(request.EnseignantAModifierDto)}");
+            var reponse = new ReponseDeRequette();
+            var entiere = await _pointDaccess.RepertoireDenseignant.Lire(request.EnseignantId);
 
-            if (enseignant is null)
-                throw new NotFoundException(nameof(enseignant), request.EnseignantId);
-
-            if (request.EnseignantAModifierDto != null)
+            if (entiere is null)
             {
-                var reponse = new ReponseDeRequette();
+                reponse.Success = false;
+                reponse.Message = "La entiere specifier est introuvable ";
+                reponse.Id = request.EnseignantId;
+                reponse.StatusCode = (int)HttpStatusCode.NotFound;
+                _logger.LogWarning($"la entiere nexsite pas Id : [{request.EnseignantId}]");
+            }
+            else
+            {
                 var validateur = new ValidateurDeLaModificationDenseignantDto();
                 var resultatValidation = await validateur.ValidateAsync(request.EnseignantAModifierDto, cancellationToken);
 
-                if (!await _pointDaccess.RepertoireDenseignant.Exists(request.EnseignantId))
-                    throw new BadRequestException($"L'un des Ids Enseignant::[{request.EnseignantId}] que vous avez entrez est null");
+                if (resultatValidation.IsValid is false)
+                {
+                    reponse.Success = false;
+                    reponse.Message = "Les Donnees de la entiere ne sont pas valides  ";
+                    reponse.Id = request.EnseignantId;
+                    reponse.StatusCode = (int)HttpStatusCode.BadRequest;
+                    _logger.LogError($"Les Donnees de la entiere ne sont pas valides : {JsonConvert.SerializeObject(request.EnseignantAModifierDto)}");
+                }
+                else
+                {
+                    _mapper.Map(request.EnseignantAModifierDto, entiere);
 
-                if (resultatValidation.IsValid == false)
-                    throw new ValidationException(resultatValidation);
+                    await _pointDaccess.RepertoireDenseignant.Modifier(entiere);
+                    await _pointDaccess.Enregistrer();
 
-                _mapper.Map(request.EnseignantAModifierDto, enseignant);
+                    reponse.Success = true;
+                    reponse.Message = "Modification Reussit";
+                    reponse.Id = entiere.Id;
+                    reponse.StatusCode = (int)HttpStatusCode.OK;
+                    _logger.LogInformation($"Modification de la Enseignant Reussit ID: [{request.EnseignantId}]");
 
-                await _pointDaccess.RepertoireDenseignant.Modifier(enseignant);
-
-                //await _gdcProxy.ModifierEnseignantDansGDC(enseignant);
-
-                // Communication Asynchrone via le Bus Rabbit MQ
-                var dto = await GenerateDtoPourEnseignant(enseignant.Id).ConfigureAwait(false);
-                await _publishEndPoint.Publish(dto, cancellationToken).ConfigureAwait(false);
-
-                reponse.Success = true;
-                reponse.Message = "Modification Reussit";
-                reponse.Id = enseignant.Id;
-
-                return reponse;
+                    // deposer la entiere creer sur le Bus 
+                    var dtoEnseignant = await GenerateDtoPourEnseignant(request.EnseignantId).ConfigureAwait(false);
+                    await _publishEndPoint.Publish(dtoEnseignant, cancellationToken).ConfigureAwait(false);
+                }
             }
-            throw new BadRequestException("enseignant a Modifier est null");
+            return reponse;
         }
 
         #region PRIVATE FUNCTION
